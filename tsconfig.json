@@ -5,6 +5,10 @@
     "declaration": false,
     "emitDeclarationOnly": false,
     "noEmit": true,
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ES6"],
+    "types": ["react", "react-dom"],
+    "skipLibCheck": true,
     "paths": {
       "#app": ["src/app"],
       "#pages": ["src/pages"],
@@ -17,7 +21,8 @@
       "#services/*": ["src/services/*"],
       "#types/*": ["src/types/*"],
       "#utils/*": ["src/utils/*"],
-      "#styles/*": ["src/styles/*"]
+      "#styles/*": ["src/styles/*"],
+      "#sections/*": ["src/sections/*"]
     }
   },
   "include": ["src", "types"]
