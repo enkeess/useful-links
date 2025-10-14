@@ -1,0 +1,522 @@
+---
+alwaysApply: true
+---
+
+# Структура проекта
+
+## Введение
+
+Данная структура проекта сделана на основе подхода function-first и содержит в себе некоторые практики из [FSD](https://feature-sliced.design).
+
+В основном разделе рассматривается структура корневой директории `src`, остальные корневые директории описаны в разделе [Другие корневые директории](#%D0%B4%D1%80%D1%83%D0%B3%D0%B8%D0%B5-%D0%BA%D0%BE%D1%80%D0%BD%D0%B5%D0%B2%D1%8B%D0%B5-%D0%B4%D0%B8%D1%80%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%B8%D0%B8).
+
+## Обзор
+
+```sh
+└── src/
+    ├── app/                    # Инициализирующая логика приложения
+    ├── assets/                 # Картинки, шрифты, медиа-файлы
+    ├── components/             # Компоненты приложения
+    ├── constants/              # Общие константы
+    ├── contexts/               # Контексты приложения
+    ├── declarations/           # Файлы деклараций типов *.d.ts
+    ├── hooks/                  # Хуки приложения
+    ├── pages/                  # Страницы приложения
+    ├── services/               # Взаимодействие с внешним миром (запросы и т.д.)
+    ├── types/                  # Общие типы
+    └── utils/                  # Переиспользуемые модули
+```
+
+Каждая директория, за исключением `app` и `pages`, не должна иметь `index.ts` (barrel) точку входа. Это нужно для избежания возможных циклических зависимостей и коллизий имен.
+
+Вложенные директории должны содержать barrel модуль для описания своего публичного API. Клиентские модули, при импорте, не должны обходить barrel модуль и использовать приватные сущности напрямую.
+
+| Директория | Кого может использовать | Где может использоваться |
+|------------|-------------------------|--------------------------|
+| `app` | `assets`, `components`, `constants`, `contexts`, `hooks`, `pages`, `services`, `types`, `utils` | \- |
+| `assets` | \- | `app`, `components`, `pages` |
+| `components` | `assets`, `constants`, `contexts`, `hooks`, `services`, `types`, `utils` | `app`, `pages` |
+| `constants` | \- | `app`, `components`, `contexts`, `hooks`, `pages`, `services`, `types`, `utils` |
+| `contexts` | `constants`, `types`, `utils` | `app`, `components`, `hooks`, `pages` |
+| `declarations` | \- | \- |
+| `hooks` | `constants`, `contexts`, `services`, `types`, `utils` | `app`, `components`, `pages` |
+| `pages` | `assets`, `components`, `constants`, `contexts`, `hooks`, `services`, `types`, `utils` | `app` |
+| `services` | `constants`, `types`, `utils` | `app`, `components`, `contexts`, `hooks`, `pages` |
+| `types` | `constants` | `app`, `components`, `contexts`, `hooks`, `pages`, `services`, `utils` |
+| `utils` | `constants`, `types` | `app`, `components`, `contexts`, `hooks`, `pages`, `services` |
+| `__e2e__` | `constants`, `types` | \- |
+
+## `app`
+
+### Описание
+
+Здесь обычно происходит:
+- инициализация процессов и прочей фоновой логики
+- инициализация провайдеров, оберток
+
+### Структура
+
+```sh
+└── app/
+    ├── providers/
+    └── index.tsx
+```
+
+### Пример
+
+#### Инициализация внешних библиотек
+
+```tsx
+// app/providers/withQueryClient.tsx
+
+import { ComponentType } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { NamespaceContextProvider } from '@sbercloud/spa-core/bootstrap';
+
+import { NamespaceContextProvider } from '@sbercloud/spa-core/bootstrap';
+
+export function withQueryClient(Component: ComponentType) {
+  const queryClient = new QueryClient();
+
+  return function WithQueryClient() {
+    return (
+      <NamespaceContextProvider namespace={pkg.config.namespace}>
+        <QueryClientProvider client={queryClient}>
+          <Component />
+        </QueryClientProvider>
+      </NamespaceContextProvider>
+    );
+  };
+}
+```
+
+```tsx
+// app/providers/withRouter.tsx
+
+import { ComponentType } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+
+export function withRouter(Component: ComponentType) {
+  return function WithRouter() {
+    return (
+      <BrowserRouter>
+        <Component />
+      </BrowserRouter>
+    );
+  };
+}
+```
+
+#### Подключение инициализации
+
+```ts
+// app/providers/index.ts
+
+import { ComponentType } from 'react';
+
+import { withQueryClient } from './withQueryClient';
+import { withRouter } from './withRouter';
+
+export function withProviders(Component: ComponentType) {
+  return [withQueryClient, withRouter].reduceRight((Target, wrap) => wrap(Target), Component);
+}
+```
+
+```tsx
+// app/index.tsx
+
+import { Pages } from '#pages';
+
+import { withProviders } from './providers';
+
+export const App = withProviders(function App() {
+  // Здесь мы уже можем пользоваться контекстами.
+  return <Pages />;
+});
+```
+
+## `assets`
+
+### Описание
+
+Директория с общими файлами шрифтов, картинок и других медиа-файлов.
+
+## `components`
+
+### Описание
+
+Здесь располагаются UI-компоненты. Допускается делать вложенные компоненты, константы, хуки и т.д, но не более одного уровня вложенности. Большая вложенность ухудшает навигацию по проекту. За исключением компонентов, вложенные вещи могут быть как в виде директории, так и в виде файла.
+
+### Структура
+
+Вложенность в виде директории:
+
+```sh
+└── components/{name}
+    ├── components/
+    ├── constants/
+    ├── hooks/
+    ├── types/
+    ├── utils/
+    ├── {name}.tsx
+    ├── styled.ts
+    └── index.ts
+```
+
+Вложенность в виде файла:
+
+```sh
+└── components/{name}
+    ├── components/
+    ├── constants.ts
+    ├── hooks.ts
+    ├── types.ts
+    ├── utils.ts
+    ├── {name}.tsx
+    ├── styled.ts
+    └── index.ts
+```
+
+## `constants`
+
+### Описание
+
+Директория с константами, перечислениями. Должны быть сгруппированы по сущности.
+
+### Структура
+
+В виде файла:
+
+```sh
+└── constants/
+    └── {entity}.ts
+```
+
+В виде директории:
+
+```sh
+└── constants/{entity}/
+    ├── {name}.ts
+    └── index.ts
+```
+
+### Пример
+
+```ts
+// constants/edgeGateway.ts
+
+export enum EdgeGatewayParentType {
+  Vdc = 'EDGE_PARENT_TYPE_VDC',
+  Dcg = 'EDGE_PARENT_TYPE_DCG',
+}
+
+export enum EdgeGatewaySize {
+  Compact = 'COMPACT',
+  Large = 'LARGE',
+}
+```
+
+## `contexts`
+
+### Описание
+
+Директория с пользовательскими контекстами.
+
+### Структура
+
+```sh
+└── contexts/
+    └── {name}Context.ts
+```
+
+## `declarations`
+
+### Описание
+
+Здесь располагаются `*.d.ts` файлы деклараций типов.
+
+## `hooks`
+
+### Описание
+
+Директория с пользовательскими хуками, обертками над `react-query`. Должны быть сгруппированы по сущности.
+
+### Структура
+
+В виде файла:
+
+```sh
+└── hooks/
+    └── {entity}.ts
+```
+
+В виде директории:
+
+```sh
+└── hooks/{entity}/
+    ├── use{name}.ts
+    └── index.ts
+```
+
+### Пример
+
+```ts
+// hooks/tenant.ts
+
+import { useQuery } from 'react-query';
+
+import { getTenants } from '#services/tenant';
+
+export function getTenantsQueryKey(projectId: string) {
+  return ['tenants', projectId];
+}
+
+export function useTenantsQuery(projectId: string) {
+  return useQuery(getTenantsQueryKey(projectId), ({ signal }) => getTenants(projectId, signal));
+}
+```
+
+## `pages`
+
+### Описание
+
+Здесь располагаются страницы приложения. У страниц не должно быть локальных компонентов, хуков и т.д, вместо этого они должны использовать общие `components` и `hooks` соответственно.
+
+### Структура
+
+```sh
+└── pages/
+    ├── {name}/
+        ├── {name}.tsx
+        ├── styled.ts
+        └── index.ts
+    └── index.tsx
+```
+
+### Пример
+
+```tsx
+// pages/Home/Home.tsx
+
+import { useTranslation } from 'react-i18next';
+
+import { ButtonFunction } from '@snack-uikit/button';
+
+import { translations } from '#utils/i18n';
+
+export function Home() {
+  const { t } = useTranslation();
+
+  return <ButtonFunction label={t(translations.title)} />;
+}
+```
+
+```ts
+// pages/Home/index.ts
+
+export * from './Home';
+```
+
+```tsx
+// pages/index.tsx
+
+import { RouteObject, useRoutes } from 'react-router-dom';
+import { ReadonlyDeep } from 'type-fest';
+
+import { Home } from './Home';
+
+export const ROUTES_CONFIG = [
+  {
+    index: true,
+    element: <Home />,
+  },
+] as const satisfies ReadonlyDeep<RouteObject[]>;
+
+export function Pages() {
+  return useRoutes(ROUTES_CONFIG as unknown as RouteObject[]);
+}
+```
+
+## `services`
+
+### Описание
+
+Директория с запросами к серверу, созданием инстансов HTTP клиентов, трансформацией низкоуровневых структур данных в высокоуровневые. Должны быть сгруппированы по сущности.
+
+Трансформации данных лучше делать рядом с запросами. Переиспользуемые функции трансформаций можно положить в директорию `services/helpers`.
+
+### Структура
+
+В виде файла:
+
+```sh
+└── services/
+    └── {entity}.ts
+```
+
+В виде директории:
+
+```sh
+└── services/{entity}/
+    ├── {name}.ts
+    └── index.ts
+```
+
+### Пример
+
+```ts
+// services/tenant.ts
+
+import { Tenant, TenantInput } from '#types/tenant';
+
+import { vcloudV1 } from './http';
+
+export async function createTenant(productInstanceId: string, input: TenantInput) {
+  await vcloudV1.post<void>({
+    url: '/tenants',
+    body: {
+      product_instance_id: productInstanceId,
+      alias: input.name,
+    },
+  });
+}
+
+type GetTenantsResponse = {
+  result: Array<{ id: string; alias: string; }>;
+};
+
+export async function getTenants(projectId: string, signal?: AbortSignal): Promise<Tenant[]> {
+  const { data } = await vcloudV1.get<GetTenantsResponse>({
+    url: '/tenants',
+    params: { project_id: projectId },
+    signal,
+  });
+
+  return data.result.map(({ id, alias }) => ({
+    id,
+    name: alias,
+  }));
+}
+```
+
+## `types`
+
+### Описание
+
+Высокоуровневые типы (бизнес-сущности), которые могут быть использованы во всем приложении. Должны быть сгруппированы по сущности.
+
+### Структура
+
+В виде файла:
+
+```sh
+└── types/
+    └── {entity}.ts
+```
+
+В виде директории:
+
+```sh
+└── types/{entity}/
+    ├── {name}.ts
+    └── index.ts
+```
+
+### Пример
+
+```ts
+// types/tenant.ts
+
+export type Tenant = {
+  id: string;
+  name: string;
+  regionAlias: string;
+};
+
+export type TenantInput = {
+  name: string;
+  regionAlias: string;
+};
+```
+
+## `utils`
+
+### Описание
+
+Переиспользуемые модули.
+
+## Тесты
+
+### Описание
+
+Файлы `unit` - тестов необходимо складывать в директорию `__tests__` на том же уровне, что и тестируемый модуль, добавляя суффикс `.spec`.
+
+### Пример
+
+```ts
+// utils/getRange.ts
+
+export function getRange(start: number, end: number) {
+  return Array.from({ length: end - start + 1 }, (_, value) => value + start);
+}
+```
+
+```ts
+// utils/__tests__/getRange.spec.ts
+
+import { getRange } from '../getRange';
+
+it('returns array range from start to end', () => {
+  expect(getRange(1, 5)).toEqual([1, 2, 3, 4, 5]);
+});
+```
+
+Файлы `e2e` - тестов необходимо складывать в директорию `tests`, которая должна находиться в корне проекта.
+
+### Пример
+
+```ts
+// tests/smoke/userMenu.smoke.ts
+
+import { expect } from 'playwright/test';
+
+test('@smoke @mobileOnly Смена организации через user-menu', async ({ page }) => {
+  await expect(page.getByTestId('my-element')).toBeVisible();
+});
+```
+
+## Другие корневые директории
+
+### `.gitlab`
+
+Специальная директория GitLab, в которой лежат настройки репозитория. Более подробно можно узнать в [документации](https://docs.gitlab.com/ee/development/features_inside_dot_gitlab.html).
+
+### `.husky`
+
+Содержит [`husky`](https://typicode.github.io/husky) git-хуки.
+
+### `public`
+
+Директория со статикой приложения. Например с файлами переводов.
+
+### `node_modules`
+
+Директория со списком установленных зависимостей, описанных в package.json
+
+## FAQ
+
+### Почему за основу взят function-first подход?
+
+Так как мы используем микро-фронтенд архитектуру, мы должны стремиться к тому, чтобы каждый микро-фронтенд был достаточно простым. Если стараться соблюдать эту практику, то function-first подхода должно быть достаточно.
+
+### Как быть с `i18n`?
+
+При использовании библиотеки `i18next`, инициализацию провайдера `I18nextProvider` лучше класть в `app/providers`, а ключи переводов в `utils/i18n`. Таким образом мы разделяем инициализацию конкретного решения для `i18n` и ключи переводов, которые могут быть использованы с любой другой реализацией.
+
+### При использовании таблиц, куда складывать компоненты ячеек (`Renderers`)?
+
+Если компонент ячейки используется только в конкретной таблице, то во вложенную директорию `components`, если ячейка используется в разных таблицах, то в общий `components`.
+
+### Можно ли класть в `contexts` хуки?
+
+Например при создании `TenantsContext.ts` помимо самого `TenantsContext` хочется положить еще и `useTenants`, используя `useContext(TenantsContext)`. Делая это мы говорим, что хук `useTenants` использует у себя контекст и следовательно раскрываем его реализацию, хотя хук мог бы быть реализован через URL или запрос. В добавок, если класть хуки рядом с контекстами, то у пользователя будет два источника хуков, что плохо. Директория `contexts` нужна для избежания циклических зависимостей между `components` и `hooks`, в ней должны лежать только контексты, а хуки должны лежать в `hooks`.

@@ -1,49 +1,42 @@
-import { Markdown } from '@snack-uikit/markdown';
+import { Card } from '@snack-uikit/card';
+import { Typography } from '@snack-uikit/typography';
 
-import planContent from './plan.md?raw';
+import { CURSOR_LINKS, type LinkGroup } from '#constants/links';
+
 import styles from './styles.module.scss';
+
+function LinkCard({ title, url, description }: { title: string; url: string; description?: string }) {
+  return (
+    <Card
+      outline
+      className={styles.linkCard}
+      href={url}
+      header={<Card.Header title={title} description={description} />}
+    />
+  );
+}
+
+function LinkGroup({ title, links }: LinkGroup) {
+  return (
+    <div className={styles.linkGroup}>
+      <Typography.SansTitleL className={styles.groupTitle}>{title}</Typography.SansTitleL>
+      <div className={styles.linksGrid}>
+        {links.map((link, index) => (
+          <LinkCard key={index} {...link} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Instructions() {
   return (
-    <main className={styles.instructions}>
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.steps}>
-            <div className={styles.step}>
-              <div className={styles.stepContent}>
-                <h3>Customize the theme</h3>
-                <p>
-                  Open file <code>src/app/global.scss</code> and paste copied code in section{' '}
-                  <code>{'// INSERT YOUR CUSTOM COLORS'}</code>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.example}>
-            <Markdown value={planContent} />
-          </div>
-
-          <div className={styles.example}>
-            <h4>Example code in global.scss:</h4>
-            <pre className={styles.codeBlock}>
-              {`// INSERT YOUR CUSTOM COLORS
-
-.light {
-  --sys-primary-background: #f0f9f5;
-  --sys-primary-background1-level: #f4fdf9;
-  // ... your colors
-}
-
-.dark {
-  --sys-primary-background: #1c2420;
-  --sys-primary-background1-level: #1b2923;
-  // ... your colors
-}`}
-            </pre>
-          </div>
-        </div>
+    <div className={styles.container}>
+      <div className={styles.groupsContainer}>
+        {CURSOR_LINKS.map((group, index) => (
+          <LinkGroup key={index} {...group} />
+        ))}
       </div>
-    </main>
+    </div>
   );
 }

@@ -2,10 +2,9 @@ import { useRef, useState } from 'react';
 
 import { CrossSVG, DaySVG, NightSVG } from '@snack-uikit/icons';
 import { SegmentedControl } from '@snack-uikit/segmented-control';
+import { Typography } from '@snack-uikit/typography';
 
 import { Section } from '../Section';
-import { CloudRu } from './logo/CloudRu';
-import { TeamSnack } from './logo/TeamSnack';
 import styles from './styles.module.scss';
 
 export function Header() {
@@ -23,10 +22,11 @@ export function Header() {
     <header className={styles.header}>
       <Section>
         <nav className={styles.nav}>
+          <div></div>
           <div className={styles.logo}>
-            <TeamSnack />
             <CrossSVG className={styles.logoCross} size={16} />
-            <CloudRu />
+            <Typography.SansHeadlineS> Полезные ссылки для работы с Cursor</Typography.SansHeadlineS>
+            <CrossSVG className={styles.logoCross} size={16} />
           </div>
           <div className={styles.alignRight}>
             <SegmentedControl
