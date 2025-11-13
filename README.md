@@ -1,49 +1,70 @@
-# Snack Template
+# Полезные ссылки для работы с LLM
 
-A modern React application template with basic configuration for working with [snack-uikit](https://github.com/cloud-ru-tech/snack-uikit). This template provides a solid foundation for building applications using Cloud.ru's design system and UI components.
+Веб-приложение с коллекцией полезных ссылок и ресурсов для эффективной работы с AI-powered редакторами кода. Приложение построено на базе [snack-uikit](https://github.com/cloud-ru-tech/snack-uikit) - дизайн-системы Cloud.ru.
 
-## Features
+## 📋 Содержание
 
-- **React 19** with TypeScript
-- **Vite** for fast development and building
-- **snack-uikit** integration with pre-configured components
-- **SCSS Modules** for component-scoped styling
-- **ESLint & Prettier** for code quality and formatting
-- **Stylelint** for CSS/SCSS linting
-- **Husky** for Git hooks
-- **Path aliases** for clean imports
-- **SVG loader** for optimized SVG handling
+Приложение содержит следующие разделы:
 
-## 📦 Included snack-uikit Components
+- **Документация** - Подключение к LLM провайдеру Cloud.ru
+- **Cloud.ru** - Официальный телеграм канал и вакансии
+- **Промт инжиниринг** - Техники создания эффективных промтов
+- **Cursor Rules** - Документация и коллекция правил контекста
+- **Миграция с других IDE** - Руководства по переходу с VSCode и JetBrains
+- **Управление контекстом** - Работа с символами, вкладками и AI агентом
+- **Конфигурация** - Настройка команд терминала
+- **MCP (Model Context Protocol)** - Документация и коллекция MCP серверов
+- **Обучение** - Курсы и материалы по работе с AI моделями
 
-- `@snack-uikit/figma-tokens-nachos` - Design tokens
-- `@snack-uikit/icons` - Icon components
-- `@snack-uikit/locale` - Internationalization
-- `@snack-uikit/typography` - Typography components
+## ✨ Особенности
 
-## 🛠️ Available Scripts
+- **Адаптивный дизайн** - Оптимизировано для мобильных устройств и десктопов
+- **Темная/светлая тема** - Переключение между темами оформления
+- **React 19** с TypeScript
+- **Vite** для быстрой разработки и сборки
+- **snack-uikit** - компоненты дизайн-системы Cloud.ru
+- **SCSS Modules** для изолированных стилей компонентов
+- **ESLint & Prettier** для качества кода
+- **Stylelint** для линтинга CSS/SCSS
+- **Husky** для Git хуков
+- **Path aliases** для удобных импортов
+
+## 📦 Используемые компоненты snack-uikit
+
+- `@snack-uikit/card` - Карточки для ссылок
+- `@snack-uikit/figma-tokens-nachos` - Дизайн-токены
+- `@snack-uikit/icons` - Иконки
+- `@snack-uikit/segmented-control` - Переключатель темы
+- `@snack-uikit/typography` - Типографика
+
+## 🛠️ Доступные команды
 
 ```bash
-# Start development server
+# Запуск dev сервера
 npm run dev
 
-# Build for production
+# Сборка для production
 npm run build
 
-# Preview production build
+# Просмотр production сборки
 npm run preview
 
-# Run ESLint
+# Запуск ESLint
 npm run lint
+
+# Деплой на GitHub Pages
+npm run deploy
 ```
 
-## 🎨 Styling
+## 🎨 Стилизация
 
-The project uses SCSS Modules for component-scoped styling. Each component has its own `styles.module.scss` file that generates unique class names to prevent style conflicts.
+Проект использует SCSS Modules для изолированных стилей компонентов. Каждый компонент имеет свой файл `styles.module.scss`, который генерирует уникальные имена классов для предотвращения конфликтов стилей.
 
-## 🔗 Path Aliases
+Все компоненты адаптированы для мобильных устройств с использованием медиа-запросов.
 
-The project includes convenient path aliases for clean imports:
+## 🔗 Алиасы путей
+
+Проект использует удобные алиасы для импортов:
 
 - `#app` → `src/app`
 - `#components` → `src/components`
@@ -51,36 +72,68 @@ The project includes convenient path aliases for clean imports:
 - `#pages` → `src/pages`
 - `#types` → `src/types`
 
-## �� Resources
+## 🔗 Полезные ресурсы
 
-- **Storybook**: [snack-uikit Storybook](https://cloud-ru-tech.github.io/snack-uikit)
-- **GitHub**: [snack-uikit Repository](https://github.com/cloud-ru-tech/snack-uikit)
-- **Figma**: [Design System](<https://www.figma.com/files/1101513230643708615/team/1194627249980298820/DS-(FF)>)
-- **Cloud.ru**: [Official Website](https://cloud.ru)
+- **Cursor**: [Официальный сайт](https://cursor.com)
+- **Cloud.ru**: [Официальный сайт](https://cloud.ru)
+- **Cloud.ru Telegram**: [@cloudruprovider](https://t.me/cloudruprovider)
+- **snack-uikit Storybook**: [Документация компонентов](https://cloud-ru-tech.github.io/snack-uikit)
+- **snack-uikit GitHub**: [Репозиторий](https://github.com/cloud-ru-tech/snack-uikit)
+- **Figma Design System**: [Дизайн-система](https://www.figma.com/files/1101513230643708615/team/1194627249980298820/DS-(FF))
 
-## 🚀 Getting Started
+## 🚀 Быстрый старт
 
-1. Clone the repository
-2. Install dependencies:
+1. Клонируйте репозиторий:
+   ```bash
+   git clone <repository-url>
+   cd useful-links
+   ```
+
+2. Установите зависимости:
    ```bash
    npm install
    ```
-3. Start the development server:
+
+3. Запустите dev сервер:
    ```bash
    npm run dev
    ```
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
 
-## 📝 Development
+4. Откройте [http://localhost:5173](http://localhost:5173) в браузере
 
-This template includes pre-configured linting and formatting tools:
+## 📝 Разработка
 
-- **ESLint** with Cloud.ru configuration
-- **Prettier** for code formatting
-- **Stylelint** for SCSS linting
-- **Husky** for pre-commit hooks
-- **lint-staged** for staged file linting
+Проект включает предварительно настроенные инструменты для качества кода:
 
-## �� About Cloud.ru
+- **ESLint** с конфигурацией Cloud.ru
+- **Prettier** для форматирования кода
+- **Stylelint** для линтинга SCSS
+- **Husky** для pre-commit хуков
+- **lint-staged** для линтинга staged файлов
 
-This template is part of Cloud.ru's frontend development ecosystem, providing a standardized starting point for new projects using the snack-uikit design system.
+## 📱 Адаптивность
+
+Приложение полностью адаптировано для работы на мобильных устройствах:
+- Адаптивная навигация в Header
+- Адаптивные отступы и размеры
+- Оптимизированная сетка карточек для мобильных экранов
+- Поддержка touch-жестов
+
+## 🎯 Структура проекта
+
+```
+src/
+├── app/              # Инициализация приложения
+├── components/       # React компоненты
+│   ├── Contacts/    # Блок контактов
+│   ├── Header/      # Шапка с навигацией
+│   ├── Instructions/# Блок с полезными ссылками
+│   └── Section/     # Обертка для секций
+├── constants/        # Константы (ссылки)
+├── pages/           # Страницы приложения
+└── types/           # TypeScript типы
+```
+
+## 📄 Лицензия
+
+
