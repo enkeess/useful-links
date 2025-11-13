@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 export function Header() {
   const bodyRef = useRef<HTMLElement>(document.body);
 
-  const [theme, setTheme] = useState(bodyRef.current.classList.contains('light') ? 'light' : 'dark');
+  const [theme, setTheme] = useState(bodyRef.current.classList.contains('dark') ? 'dark' : 'light');
 
   const toggleTheme = (newTheme: string) => {
     bodyRef.current.classList.toggle('light');
