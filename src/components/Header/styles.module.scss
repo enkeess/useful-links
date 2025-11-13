@@ -60,4 +60,8 @@
 .logoCross {
   opacity: 0.64;
   fill: vars.$sys-primary-on-accent;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 }
