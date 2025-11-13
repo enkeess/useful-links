@@ -25,7 +25,7 @@ export function Header() {
           <div></div>
           <div className={styles.logo}>
             <CrossSVG className={styles.logoCross} size={16} />
-            <Typography.SansHeadlineS> Полезные ссылки для работы с Cursor</Typography.SansHeadlineS>
+            <Typography.SansHeadlineS> Полезные ссылки для работы</Typography.SansHeadlineS>
             <CrossSVG className={styles.logoCross} size={16} />
           </div>
           <div className={styles.alignRight}>

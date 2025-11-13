@@ -1,3 +1,4 @@
+import { Contacts } from '#components/Contacts';
 import { Header } from '#components/Header';
 import { Instructions } from '#components/Instructions';
 
@@ -9,6 +10,8 @@ export function Pages() {
       <Header />
 
       <Instructions />
+
+      <Contacts />
     </div>
   );
 }

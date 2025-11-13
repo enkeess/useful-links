@@ -1,0 +1,69 @@
+@use '@snack-uikit/figma-tokens-nachos/build/scss/styles-theme-variables.scss' as vars;
+
+.contacts {
+  margin-top: 48px;
+  margin-bottom: 48px;
+}
+
+.contactsCard {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contactsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.contactsTitle {
+  margin: 0;
+}
+
+.contactsDescription {
+  margin: 0;
+  color: vars.$sys-neutral-text-support;
+}
+
+.telegramLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 8px;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover {
+    background-color: vars.$sys-neutral-background;
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.telegramUsername {
+  margin: 0;
+  color: vars.$sys-primary-accent-default;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .contacts {
+    margin-top: 32px;
+    margin-bottom: 32px;
+  }
+
+  .contactsContent {
+    padding: 20px 16px;
+    gap: 12px;
+  }
+}
+

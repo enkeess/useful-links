@@ -11,6 +11,31 @@ export type LinkGroup = {
 
 export const CURSOR_LINKS: LinkGroup[] = [
   {
+    title: 'Документация',
+    links: [
+      {
+        title: 'Подключение к LLM',
+        url: 'https://cloud.ru/docs/foundation-models/ug/topics/tutorials__connect-vscode?source-platform=Evolution',
+        description: 'Документация по LLM для работы в VS Code',
+      },
+    ],
+  },
+  {
+    title: 'Cloud.ru',
+    links: [
+      {
+        title: 'Телеграм канал Cloud.ru',
+        url: 'https://t.me/cloudruprovider',
+        description: 'Официальный телеграм канал Cloud.ru',
+      },
+      {
+        title: 'Стань частью нашей команды',
+        url: 'https://cloud.ru/career/vacancies',
+        description: 'Вакансии в Cloud.ru',
+      },
+    ],
+  },
+  {
     title: 'Промт инжиниринг',
     links: [
       {

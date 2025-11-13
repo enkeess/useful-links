@@ -49,9 +49,10 @@
 
 html,
 body {
-  min-width: 960px;
+  width: 100%;
   max-width: 100vw;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body {
